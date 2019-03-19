@@ -18,9 +18,9 @@ public class MainFunction {
         }
         Expression poly = new Expression(inputReader.getProcessed());
         try {
-            String output = poly.derivative().replaceFirst("^\\+", "");
+            String output = poly.derivative();
             Expression op = new Expression(output);
-            System.out.println(op.getData());
+            System.out.println(op.getData().replaceFirst("^\\+", ""));
         } catch (Exception e) {
             System.out.println("WRONG FORMAT!");
         }
