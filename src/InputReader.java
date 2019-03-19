@@ -31,6 +31,7 @@ class InputReader {
     }
     
     String getProcessed() {
+        data = data.replaceAll("[ \t]","");
         data = ("+" + data).replace("^+", "^");
         data = data.replace("++", "+").replace("--", "+");
         data = data.replace("-+", "-").replace("+-", "-");

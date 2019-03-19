@@ -20,9 +20,9 @@ public class Item implements Term {
         Matcher preM = prePattern.matcher(unprocessed);
         while (preM.find()) {
             unprocessed = unprocessed.replace(
-                    preM.group(), preM.group().replace("*", "%"))
-                    .replace(preM.group(), preM.group().replace("(", "{"))
-                    .replace(preM.group(), preM.group().replace(")", "}"));
+                    preM.group(), preM.group().replace("*", "%")
+                    .replace("(", "{")
+                    .replace(")", "}"));
             preM = prePattern.matcher(unprocessed);
         }
         String regex = ".*?\\*";
@@ -36,7 +36,7 @@ public class Item implements Term {
                     .replace("{", "(").replace("}", ")");
             big = big.replace("%", "*")
                     .replace("{", "(").replace("}", ")");
-            little = little.replace("*", "");
+            little = little.replaceAll("\\*$", "");
             if (little.matches("[+-]?\\d*")) {
                 ans += new Num(little).derivative();
             } else if (little.matches("x(?:\\^\\d*)?")) {

@@ -20,10 +20,10 @@ public class Expression implements Term {
         Matcher preM = prePattern.matcher(unprocessed);
         while (preM.find()) {
             unprocessed = unprocessed.replace(
-                    preM.group(), preM.group().replace("+", "&"))
-                    .replace(preM.group(), preM.group().replace("-", "|"))
-                    .replace(preM.group(), preM.group().replace("(", "{"))
-                    .replace(preM.group(), preM.group().replace(")", "}"));
+                    preM.group(), preM.group().replace("+", "&")
+                    .replace("-", "|")
+                    .replace("(", "{")
+                    .replace(")", "}"));
             preM = prePattern.matcher(unprocessed);
         }
         String regex = "[+-].*?[^*(][+-]";
@@ -52,7 +52,8 @@ public class Expression implements Term {
             ans += new Expression(big).derivative();
             return ans;
         } else {
-            unprocessed = unprocessed.replace("%", "*")
+            unprocessed = unprocessed.replace("&", "+")
+                    .replace("|", "-")
                     .replace("{", "(")
                     .replace("}", ")");
             ans = Character.toString(unprocessed.toCharArray()[0]);
