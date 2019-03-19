@@ -1,15 +1,22 @@
+import java.util.Scanner;
+
 public class MainFunction {
-    private static String poly;
     
     public static void main(String[] args) {
-        InputReader inputReader = new InputReader();
-        if (!inputReader.isValid()) {
+        String data;
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.hasNext()) {
+            data = scanner.nextLine();
+        } else {
+            data = "";
+        }
+        scanner.close();
+        InputReader inputReader = new InputReader(data);
+        if (!inputReader.isValid(inputReader.getData())) {
             System.out.print("WRONG FORMAT!");
             return;
         }
-        poly = inputReader.getProcessed();
-        
-        
-        System.out.print(poly);
+        Expression poly = new Expression(inputReader.getProcessed());
+        System.out.print(poly.derivative().replaceFirst("^\\+", ""));
     }
 }

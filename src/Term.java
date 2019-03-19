@@ -1,7 +1,7 @@
 public interface Term {
     String derivative();
     
-    String getString();
+    String getData();
     
     void optimize();
 }

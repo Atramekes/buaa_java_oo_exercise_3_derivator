@@ -1,8 +1,12 @@
-public class Poly implements Term {
+public class Expression implements Term {
     private String data;
     
-    Poly(String input) {
-        data = input;
+    Expression(String input) {
+        setData(input);
+    }
+    
+    private void setData(String string) {
+        data = string;
     }
     
     @Override
@@ -16,7 +20,8 @@ public class Poly implements Term {
     }
     
     @Override
-    public String getString() {
+    public String getData() {
+        optimize();
         return data;
     }
 }
