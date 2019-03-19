@@ -27,7 +27,7 @@ public class SinxPower extends Factor implements Term {
             ans = coefficient + "*";
             String content;
             content = data.replaceFirst("\\^\\d+$", "");
-            ans += content + ")^" + power + "*(";
+            ans += content + "^" + power + "*(";
             ans += new Item(content).derivative();
             ans += ")";
             return ans;
