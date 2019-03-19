@@ -66,8 +66,7 @@ public class Expression implements Term {
     
     @Override
     public void optimize() {
-        
-        if (data.matches("[(].*[)]")) {
+        if (data.matches("^[(].*[)]$")) {
             String simplified;
             simplified = data.replaceAll("[)]$", "").replaceAll("^[(]", "");
             if (!simplified.matches("[+-].*")) {

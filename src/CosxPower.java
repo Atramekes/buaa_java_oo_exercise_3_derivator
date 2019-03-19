@@ -24,10 +24,9 @@ public class CosxPower extends Factor implements Term {
             if (power.subtract(new BigInteger("9999")).signum() == 1) {
                 throw new Exception();
             }
-            ans = BigInteger.ZERO.subtract(coefficient).toString() + "*sin(";
+            ans = coefficient.toString() + "*";
             String content;
-            content = data.replaceFirst("cos[(]", "")
-                    .replaceFirst("[)]\\^\\d+$", "");
+            content = data.replaceFirst("[)]\\^\\d+$", "");
             ans += content + ")^" + power + "*(";
             ans += new Item(content).derivative();
             ans += ")";

@@ -24,10 +24,9 @@ public class SinxPower extends Factor implements Term {
             if (power.subtract(new BigInteger("9999")).signum() == 1) {
                 throw new Exception();
             }
-            ans = coefficient + "*cos(";
+            ans = coefficient + "*";
             String content;
-            content = data.replaceFirst("sin[(]", "")
-                    .replaceFirst("[)]\\^\\d+$", "");
+            content = data.replaceFirst("\\^\\d+$", "");
             ans += content + ")^" + power + "*(";
             ans += new Item(content).derivative();
             ans += ")";
