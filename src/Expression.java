@@ -21,9 +21,9 @@ public class Expression implements Term {
         while (preM.find()) {
             unprocessed = unprocessed.replace(
                     preM.group(), preM.group().replace("+", "&")
-                    .replace("-", "|")
-                    .replace("(", "{")
-                    .replace(")", "}"));
+                            .replace("-", "|")
+                            .replace("(", "{")
+                            .replace(")", "}"));
             preM = prePattern.matcher(unprocessed);
         }
         String regex = "[+-].*?[^*(][+-]";
@@ -64,15 +64,17 @@ public class Expression implements Term {
     
     @Override
     public void optimize() {
+        
         if (data.matches("[(].*[)]")) {
             String simplified;
             simplified = data.replaceAll("[)]$", "").replaceAll("^[(]", "");
             if (!simplified.matches("[+-].*")) {
                 simplified = "+" + simplified;
             }
-            setData(simplified);
+            if (!simplified.matches("[^(]*[)].*")) {
+                setData(simplified);
+            }
         }
-        
     }
     
     @Override

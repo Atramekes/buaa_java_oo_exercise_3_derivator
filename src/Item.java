@@ -21,8 +21,8 @@ public class Item implements Term {
         while (preM.find()) {
             unprocessed = unprocessed.replace(
                     preM.group(), preM.group().replace("*", "%")
-                    .replace("(", "{")
-                    .replace(")", "}"));
+                            .replace("(", "{")
+                            .replace(")", "}"));
             preM = prePattern.matcher(unprocessed);
         }
         String regex = ".*?\\*";
@@ -45,8 +45,8 @@ public class Item implements Term {
                 ans += new SinxPower(little).derivative();
             } else if (little.matches("cos[(].*[)](?:\\^\\d*)?")) {
                 ans += new CosxPower(little).derivative();
-            } else if (unprocessed.matches("[(].*[)]")) {
-                ans += new Expression(unprocessed).derivative();
+            } else if (little.matches("[(].*[)]")) {
+                ans += new Expression(little).derivative();
             } else {
                 throw new Exception();
             }
@@ -66,7 +66,7 @@ public class Item implements Term {
             return new SinxPower(unprocessed).derivative();
         } else if (unprocessed.matches("cos[(].*[)](?:\\^\\d*)?")) {
             return new CosxPower(unprocessed).derivative();
-        } else if (unprocessed.matches("[(].*[)]")) {
+        } else if (unprocessed.matches("^[(].*[)]$")) {
             return new Expression(unprocessed).derivative();
         } else {
             throw new Exception();
@@ -75,7 +75,9 @@ public class Item implements Term {
     
     @Override
     public void optimize() {
-    
+        if (data.matches("$[+-]?0+\\*")) {
+            setData("0");
+        }
     }
     
     @Override
