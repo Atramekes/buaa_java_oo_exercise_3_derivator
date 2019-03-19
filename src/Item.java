@@ -14,14 +14,28 @@ public class Item implements Term {
     
     @Override
     public String derivative() throws Exception {
-        String regex = ".*?\\*";
         String unprocessed = getData();
+        String pre = "[(][^()]*[)]";
+        Pattern prePattern = Pattern.compile(pre);
+        Matcher preM = prePattern.matcher(unprocessed);
+        while (preM.find()) {
+            unprocessed = unprocessed.replace(
+                    preM.group(), preM.group().replace("*", "%"))
+                    .replace(preM.group(), preM.group().replace("(", "{"))
+                    .replace(preM.group(), preM.group().replace(")", "}"));
+            preM = prePattern.matcher(unprocessed);
+        }
+        String regex = ".*?\\*";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(unprocessed);
         if (matcher.find()) {
             String ans = "(";
             String little = matcher.group();
             String big = unprocessed.replaceFirst(".*?\\*", "");
+            little = little.replace("%", "*")
+                    .replace("{", "(").replace("}", ")");
+            big = big.replace("%", "*")
+                    .replace("{", "(").replace("}", ")");
             little = little.replace("*", "");
             if (little.matches("[+-]?\\d*")) {
                 ans += new Num(little).derivative();
@@ -41,6 +55,9 @@ public class Item implements Term {
             ans += ")*" + little;
             return ans;
         }
+        unprocessed = unprocessed.replace("%", "*")
+                .replace("{", "(")
+                .replace("}", ")");
         if (unprocessed.matches("[+-]?\\d+")) {
             return new Num(unprocessed).derivative();
         } else if (unprocessed.matches("x(?:\\^\\d*)?")) {
