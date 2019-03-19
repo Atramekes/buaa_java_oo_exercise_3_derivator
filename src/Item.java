@@ -75,9 +75,7 @@ public class Item implements Term {
     
     @Override
     public void optimize() {
-        if (data.matches("$[+-]?0+\\*")) {
-            setData("0");
-        }
+    
     }
     
     @Override

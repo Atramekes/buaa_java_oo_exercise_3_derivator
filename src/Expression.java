@@ -38,7 +38,7 @@ public class Expression implements Term {
             Pattern p1 = Pattern.compile(plus1);
             Matcher m1 = p1.matcher(little);
             m1.find();
-            ans += m1.group();
+            ans += m1.group() + "(";
             String plus2 = "[+-]$";
             Pattern p2 = Pattern.compile(plus2);
             Matcher m2 = p2.matcher(little);
@@ -48,7 +48,7 @@ public class Expression implements Term {
                     .replace("{", "(").replace("}", ")");
             big = m2.group() + big;
             ans += new Item(little.replaceFirst(plus1, "")
-                    .replaceFirst(plus2, "")).derivative();
+                    .replaceFirst(plus2, "")).derivative() + ")";
             ans += new Expression(big).derivative();
             return ans;
         } else {
@@ -57,7 +57,9 @@ public class Expression implements Term {
                     .replace("{", "(")
                     .replace("}", ")");
             ans = Character.toString(unprocessed.toCharArray()[0]);
+            ans += "(";
             ans += new Item(unprocessed.replaceFirst("[+-]", "")).derivative();
+            ans += ")";
             return ans;
         }
     }
