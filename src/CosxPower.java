@@ -21,7 +21,7 @@ public class CosxPower extends Factor implements Term {
             BigInteger coefficient = new BigInteger(matcher.group());
             BigInteger power = new BigInteger(matcher.group())
                     .subtract(BigInteger.ONE);
-            if (power.subtract(new BigInteger("10000")).signum() == 1) {
+            if (power.subtract(new BigInteger("9999")).signum() == 1) {
                 throw new Exception();
             }
             ans = BigInteger.ZERO.subtract(coefficient).toString() + "*sin(";

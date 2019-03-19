@@ -23,7 +23,7 @@ public class XPower extends Factor implements Term {
         if (matcher.find()) {
             coefficient = new BigInteger(matcher.group());
             power = new BigInteger(matcher.group()).subtract(BigInteger.ONE);
-            if (power.subtract(new BigInteger("10000")).signum() == 1) {
+            if (power.subtract(new BigInteger("9999")).signum() == 1) {
                 throw new Exception();
             }
         } else {
