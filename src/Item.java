@@ -12,52 +12,9 @@ public class Item implements Term {
         data = string;
     }
     
-    @Override
-    public String derivative() throws Exception {
-        String unprocessed = getData();
-        String pre = "[(][^()]*[)]";
-        Pattern prePattern = Pattern.compile(pre);
-        Matcher preM = prePattern.matcher(unprocessed);
-        while (preM.find()) {
-            unprocessed = unprocessed.replace(
-                    preM.group(), preM.group().replace("*", "%")
-                            .replace("(", "{")
-                            .replace(")", "}"));
-            preM = prePattern.matcher(unprocessed);
-        }
-        String regex = ".*?\\*";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(unprocessed);
-        if (matcher.find()) {
-            String ans = "(";
-            String little = matcher.group();
-            String big = unprocessed.replaceFirst(".*?\\*", "");
-            little = little.replace("%", "*")
-                    .replace("{", "(").replace("}", ")");
-            big = big.replace("%", "*")
-                    .replace("{", "(").replace("}", ")");
-            little = little.replaceAll("\\*$", "");
-            if (little.matches("[+-]?\\d*")) {
-                ans += new Num(little).derivative();
-            } else if (little.matches("x(?:\\^\\d*)?")) {
-                ans += new XPower(little).derivative();
-            } else if (little.matches("sin[(].*[)](?:\\^\\d*)?")) {
-                ans += new SinxPower(little).derivative();
-            } else if (little.matches("cos[(].*[)](?:\\^\\d*)?")) {
-                ans += new CosxPower(little).derivative();
-            } else if (little.matches("[(].*[)]")) {
-                ans += new Expression(little).derivative();
-            } else {
-                throw new Exception();
-            }
-            ans += ")*" + big + "+(";
-            ans += new Item(big).derivative();
-            ans += ")*" + little;
-            return ans;
-        }
-        unprocessed = unprocessed.replace("%", "*")
-                .replace("{", "(")
-                .replace("}", ")");
+    private String singleDerivative(String up) throws Exception {
+        String unprocessed = up.replace("%", "*")
+                .replace("{", "(").replace("}", ")");
         if (unprocessed.matches("[+-]?\\d+")) {
             return new Num(unprocessed).derivative();
         } else if (unprocessed.matches("x(?:\\^\\d*)?")) {
@@ -71,6 +28,59 @@ public class Item implements Term {
         } else {
             throw new Exception();
         }
+    }
+    
+    @Override
+    public String derivative() throws Exception {
+        String unprocessed = getData();
+        String pre = "[(][^()]*[)]";
+        Pattern prePattern = Pattern.compile(pre);
+        Matcher preM = prePattern.matcher(unprocessed);
+        while (preM.find()) {
+            unprocessed = unprocessed.replace(
+                    preM.group(), preM.group().replace("*", "%")
+                            .replace("(", "{").replace(")", "}"));
+            preM = prePattern.matcher(unprocessed);
+        }
+        String regex = ".*?\\*";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(unprocessed);
+        if (matcher.find()) {
+            String little = matcher.group();
+            String big = unprocessed.replaceFirst(".*?\\*", "");
+            little = little.replace("%", "*")
+                    .replace("{", "(").replace("}", ")");
+            big = big.replace("%", "*")
+                    .replace("{", "(").replace("}", ")");
+            little = little.replaceAll("\\*$", "");
+            String littleDer;
+            String bigDer = new Item(big).derivative();
+            if (little.matches("[+-]?\\d+")) {
+                if (bigDer.matches("0")) {
+                    return "0";
+                }
+                return little + "*" + bigDer;
+            } else if (little.matches("x(?:\\^\\d*)?")) {
+                littleDer = new XPower(little).derivative();
+            } else if (little.matches("sin[(].*[)](?:\\^\\d*)?")) {
+                littleDer = new SinxPower(little).derivative();
+            } else if (little.matches("cos[(].*[)](?:\\^\\d*)?")) {
+                littleDer = new CosxPower(little).derivative();
+            } else if (little.matches("[(].*[)]")) {
+                littleDer = new Expression(little).derivative();
+            } else {
+                throw new Exception();
+            }
+            String ans = "(" + littleDer + ")*" + big + "+(";
+            if (bigDer.matches("0")) {
+                if (littleDer.matches("0")) {
+                    return "0";
+                }
+                return big + "*" + littleDer;
+            }
+            return ans + bigDer + ")*" + little;
+        }
+        return singleDerivative(unprocessed);
     }
     
     @Override

@@ -12,6 +12,19 @@ public class Expression implements Term {
         data = string;
     }
     
+    private String singleDerivative(String up) throws Exception {
+        String unprocessed = up.replace("&", "+")
+                .replace("|", "-")
+                .replace("{", "(")
+                .replace("}", ")");
+        String ans = Character.toString(unprocessed.toCharArray()[0]);
+        String d = new Item(unprocessed.replaceFirst("[+-]", "")).derivative();
+        if (d.matches("\\d+")) {
+            return ans + d;
+        }
+        return ans + "(" + d + ")";
+    }
+    
     @Override
     public String derivative() throws Exception {
         String unprocessed = getData();
@@ -51,17 +64,8 @@ public class Expression implements Term {
                     .replaceFirst(plus2, "")).derivative() + ")";
             ans += new Expression(big).derivative();
             return ans;
-        } else {
-            unprocessed = unprocessed.replace("&", "+")
-                    .replace("|", "-")
-                    .replace("{", "(")
-                    .replace("}", ")");
-            ans = Character.toString(unprocessed.toCharArray()[0]);
-            ans += "(";
-            ans += new Item(unprocessed.replaceFirst("[+-]", "")).derivative();
-            ans += ")";
-            return ans;
         }
+        return singleDerivative(unprocessed);
     }
     
     @Override
