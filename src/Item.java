@@ -17,11 +17,11 @@ public class Item implements Term {
                 .replace("{", "(").replace("}", ")");
         if (unprocessed.matches("[+-]?\\d+")) {
             return new Num(unprocessed).derivative();
-        } else if (unprocessed.matches("x(?:\\^\\d*)?")) {
+        } else if (unprocessed.matches("x(?:\\^\\d+)?")) {
             return new XPower(unprocessed).derivative();
-        } else if (unprocessed.matches("sin[(].*[)](?:\\^\\d*)?")) {
+        } else if (unprocessed.matches("sin[(].*[)](?:\\^\\d+)?")) {
             return new SinxPower(unprocessed).derivative();
-        } else if (unprocessed.matches("cos[(].*[)](?:\\^\\d*)?")) {
+        } else if (unprocessed.matches("cos[(].*[)](?:\\^\\d+)?")) {
             return new CosxPower(unprocessed).derivative();
         } else if (unprocessed.matches("^[(].*[)]$")) {
             return new Expression(unprocessed).derivative();
@@ -59,12 +59,12 @@ public class Item implements Term {
                 if (bigDer.matches("0")) {
                     return "0";
                 }
-                return little + "*" + bigDer;
-            } else if (little.matches("x(?:\\^\\d*)?")) {
+                return little + "*" + "(" + bigDer + ")";
+            } else if (little.matches("x(?:\\^\\d+)?")) {
                 littleDer = new XPower(little).derivative();
-            } else if (little.matches("sin[(].*[)](?:\\^\\d*)?")) {
+            } else if (little.matches("sin[(].*[)](?:\\^\\d+)?")) {
                 littleDer = new SinxPower(little).derivative();
-            } else if (little.matches("cos[(].*[)](?:\\^\\d*)?")) {
+            } else if (little.matches("cos[(].*[)](?:\\^\\d+)?")) {
                 littleDer = new CosxPower(little).derivative();
             } else if (little.matches("[(].*[)]")) {
                 littleDer = new Expression(little).derivative();
@@ -76,7 +76,7 @@ public class Item implements Term {
                 if (littleDer.matches("0")) {
                     return "0";
                 }
-                return big + "*" + littleDer;
+                return big + "*(" + littleDer + ")";
             }
             return ans + bigDer + ")*" + little;
         }
