@@ -46,7 +46,7 @@ public class CosxPower extends Factor implements Term {
     @Override
     public void optimize() {
         if (super.getData().matches(".*\\^0*1")) {
-            setData(getData().replaceAll("\\^0*1", ""));
+            setData(super.getData().replaceAll("\\^0*1", ""));
         } else if (super.getData().matches(".*\\^0*")) {
             setData("1");
         }
